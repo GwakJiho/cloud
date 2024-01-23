@@ -11,7 +11,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 #직렬화
-from .serializers import DocumentSerializers, UserSerializers, DocumentFileSerializer, PathSerializers
+from .serializers import DocumentSerializers, UserSerializers, DocumentFileSerializer, PathSerializers, MyTokenObtainPairSerializer
 from .models import Document, User, DocumentFile, Path
 
 #페이지네이션
@@ -21,6 +21,13 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 #날짜
 from .utils import convert_to_date
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
 
 @api_view(['GET'])
 def hello_world(request):
@@ -171,12 +178,14 @@ def document_upload_view(request):
     writer_id = request.POST['worker']
     abstract = request.POST['abstract']
 
+    path_obj = get_object_or_404(Path, id=path)
+
     document = Document(
         title=title,
         publication_date=convert_to_date(publication_date),
-        writer_id=writer_id,
+        writer_id = writer_id,
         abstract = abstract,
-        path = path
+        path = path_obj
     )
     document.save()
 

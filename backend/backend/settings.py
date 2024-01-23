@@ -38,6 +38,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 # Application definition
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'cloud',
     'corsheaders',  #  웹 요청 허용
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +71,6 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'cloud.backends.EmailBackend',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -100,6 +103,7 @@ TEMPLATES = [
     },
 ]
 
+EMAIL_BACKEND = 'cloud.backends.EmailBackend'
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
@@ -131,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+AUTH_USER_MODEL = 'cloud.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
